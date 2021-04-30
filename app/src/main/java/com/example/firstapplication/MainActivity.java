@@ -14,11 +14,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
     TextView textView;
     TextHandler textHandler;
+    HashMap<String, ReferenceData> referenceDataHashMap = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.textView);
         textHandler = new TextHandler(MainActivity.this);
+        loadReferenceData(R.raw.itrc_snp_hypertension_sm);
     }
 
     public void onTextLoadButtonClicked(View view) {
@@ -34,6 +37,21 @@ public class MainActivity extends AppCompatActivity {
         //String fileName = "sample.txt";
         //String text = textHandler.readTextFileByAssets(fileName);
         textView.setText(text);
+    }
+
+    public void loadReferenceData(int resId) {
+        try {
+            InputStream is = this.getResources().openRawResource(resId);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+                String[] strArray = line.split(",");
+                referenceDataHashMap.put(strArray[0], new ReferenceData(strArray));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
