@@ -1,4 +1,4 @@
-package com.example.firstapplication;
+package com.example.firstapplication.handler;
 
 import android.content.Context;
 import android.content.res.AssetManager;
