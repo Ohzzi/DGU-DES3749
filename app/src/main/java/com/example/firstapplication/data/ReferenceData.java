@@ -1,4 +1,4 @@
-package com.example.firstapplication;
+package com.example.firstapplication.data;
 
 public class ReferenceData {
 
@@ -8,18 +8,18 @@ public class ReferenceData {
     private final double BETAOR;
     private final double PVAL;
     private final long BP;
-    private final char minor;
-    private final char major;
+    private final String minor;
+    private final String major;
 
-    ReferenceData(String[] data) {
+    public ReferenceData(String[] data) {
         this.SNP = data[0];
         this.CHR = Integer.parseInt(data[1]);
         this.phenotype = data[2];
         this.BETAOR = Double.parseDouble(data[3]);
         this.PVAL = Double.parseDouble(data[4]);
         this.BP = Long.parseLong(data[5]);
-        this.minor = data[6].toCharArray()[0];
-        this.major = data[7].toCharArray()[0];
+        this.minor = data[6];
+        this.major = data[7];
     }
 
     public String getSNP() {
@@ -46,11 +46,11 @@ public class ReferenceData {
         return BP;
     }
 
-    public char getMinor() {
+    public String getMinor() {
         return minor;
     }
 
-    public char getMajor() {
+    public String getMajor() {
         return major;
     }
 }
