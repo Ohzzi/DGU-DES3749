@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     public static HashMap<String, ReferenceData> referenceDataHashMap = new HashMap<>();
 
     TextView textView;
-    // TextHandler textHandler;
     DataHandler dataHandler;
 
     @Override
@@ -30,19 +29,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.textView);
-        // textHandler = new TextHandler(MainActivity.this);
         loadReferenceData(R.raw.itrc_snp_hypertension_sm);
         dataHandler = new DataHandler(MainActivity.this);
     }
-
-    /* 사용 x
-    public void onTextLoadButtonClicked(View view) {
-        int resId = R.raw.sample;
-        String text = textHandler.readTextResource(resId);
-        //String fileName = "sample.txt";
-        //String text = textHandler.readTextFileByAssets(fileName);
-        textView.setText(text);
-    }*/
 
     /* reference data 들을 읽어오는 메소드 */
     public void loadReferenceData(int resId) {
