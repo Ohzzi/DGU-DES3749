@@ -1,4 +1,4 @@
-package com.example.firstapplication.data;
+package com.example.des3749.data;
 
 public class ResultData {
 

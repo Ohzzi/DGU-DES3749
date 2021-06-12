@@ -1,17 +1,17 @@
-package com.example.firstapplication.handler;
+package com.example.des3749.handler;
 
 import android.content.Context;
 
-import com.example.firstapplication.data.InputData;
-import com.example.firstapplication.data.ReferenceData;
-import com.example.firstapplication.data.ResultData;
+import com.example.des3749.data.InputData;
+import com.example.des3749.data.ReferenceData;
+import com.example.des3749.data.ResultData;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static com.example.firstapplication.MainActivity.referenceDataHashMap;
+import static com.example.des3749.MainActivity.referenceDataHashMap;
 
 public class DataHandler {
 

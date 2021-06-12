@@ -1,4 +1,4 @@
-package com.example.firstapplication;
+package com.example.des3749;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,10 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.firstapplication.data.ReferenceData;
-import com.example.firstapplication.data.ResultData;
-import com.example.firstapplication.handler.DataHandler;
-import com.example.firstapplication.handler.TextHandler;
+import com.example.des3749.data.ReferenceData;
+import com.example.des3749.data.ResultData;
+import com.example.des3749.handler.DataHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
