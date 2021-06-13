@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">FirstApplication</string>
-    <string name="greeting">안녕하세요!</string>
+    <string name="app_name">DES3749</string>
+    <string name="greeting">당신의 고혈압 가능성을&#10;체크하세요</string>
     <string name="button_text">텍스트 불러오기</string>
     <string name="input_1">테스트 셋 1</string>
     <string name="input_2">테스트 셋 2</string>
     <string name="input_3">테스트 셋 3</string>
+    <string name="start_msg">"게스트로&#10;시작하기"</string>
 </resources>
