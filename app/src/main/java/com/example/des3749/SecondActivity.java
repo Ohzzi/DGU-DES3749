@@ -66,7 +66,7 @@ public class SecondActivity extends AppCompatActivity {
 
     /* test set 데이터 읽어오는 버튼을 눌렀을 때 데이터를 읽어오는 메소드 */
     public void onLoadButtonClicked(View view) {
-        progressDialog.show();
+        progressDialog.show(); // 로딩 화면을 띄워줌
         buttonId = view.getId();
         buttonName = ((Button)view).getText().toString();
         textView.setText("");
@@ -74,6 +74,7 @@ public class SecondActivity extends AppCompatActivity {
         thread.start();
     }
 
+    /* 데이터를 읽어오는 메소드. 멀티스레드 환경에서 실행 */
     private final Runnable loadData = new Runnable() {
         @Override
         public void run() {
@@ -101,6 +102,7 @@ public class SecondActivity extends AppCompatActivity {
         }
     };
 
+    /* loadData에서 데이터를 읽으면 데이터 출력을 위해 실행하는 이벤트 */
     private final Runnable updateResult = new Runnable() {
         @Override
         public void run() {
@@ -117,7 +119,7 @@ public class SecondActivity extends AppCompatActivity {
                 String resultText = "오류가 발생했습니다.";
                 textView.setText(resultText);
             }
-            progressDialog.dismiss();
+            progressDialog.dismiss(); // 로딩이 끝났으므로 로딩화면 제거
         }
     };
 }
