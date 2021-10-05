@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+### Server IP ###
+/app/src/main/java/com/example/des3749/ConnectionInfo.java
