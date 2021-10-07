@@ -1,6 +1,8 @@
 package com.example.des3749.handler;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.net.Uri;
 
 import com.example.des3749.data.InputData;
 import com.example.des3749.data.ReferenceData;
@@ -30,9 +32,9 @@ public class DataHandler {
         this.context = context;
     }
 
-    public ResultData input(int id) {
+    public ResultData getTestData(Uri uri, ContentResolver resolver) {
         try {
-            InputStream is = context.getResources().openRawResource(id);
+            InputStream is = resolver.openInputStream(uri);
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             ResultData resultData;
             String line = reader.readLine(); // 데이터의 맨 윗줄(데이터의 이름 표시) 지워 줌
@@ -40,14 +42,14 @@ public class DataHandler {
                 String[] strArray = line.split(",");
                 InputData data = new InputData(Integer.parseInt(strArray[0]), strArray[1], Integer.parseInt(strArray[2]));
 
-                /* 조건: reference 들이 들어 있는 map 에 input 된 데이터의 snip 이 존재 */
+                // 조건: reference 들이 들어 있는 map 에 input 된 데이터의 snip 이 존재
                 if (referenceDataHashMap.containsKey(data.getSNP())) {
                     ReferenceData ref = referenceDataHashMap.get(data.getSNP());
                     count[data.getGeno()]++;
                     double pval = ref.getPVAL();
                     data.setPval(pval);
 
-                    /* P.VALUE 최대, 최소 값 계산 */
+                    // P.VALUE 최대, 최소 값 계산
                     if (pval < minPVAL) {
                         minPVAL = pval;
                         minPvalData = data;
