@@ -46,16 +46,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class SecondActivity extends AppCompatActivity {
 
-    /* reference data 들을 넣는 map 을 static 으로 선언하여 하나로 유지 */
-    public static HashMap<String, ReferenceData> referenceDataHashMap = new HashMap<>();
-
     Handler handler = new Handler();
     private ActivityResultLauncher<Intent> resultLauncher;
 
     TextView textView;
     Spinner spinner;
     ArrayAdapter genderAdapter;
-    Disposable backgroundTask;
     ContentResolver resolver;
     Uri fileUri;
     boolean isFileLoaded = false;
@@ -82,10 +78,12 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        progressDialog = new ProgressDialog(this);
-        loadReferenceData(serverIP);
-
         setContentView(R.layout.activity_second);
+        initialize();
+    }
+
+    public void initialize() {
+        progressDialog = new ProgressDialog(this);
         textView = findViewById(R.id.text_view);
         spinner = (Spinner)findViewById(R.id.gender_spinner);
         genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, R.layout.spinner_layout);
@@ -114,86 +112,6 @@ public class SecondActivity extends AppCompatActivity {
                     }
                 }
         );
-    }
-
-    /* reference data 들을 읽어오는 메소드 */
-    private void loadReferenceData(String serverIP) {
-        // onPreExecute
-        progressDialog.show();
-
-        backgroundTask = Observable.fromCallable(() -> {
-            // doInBackground
-            try {
-                URL url = new URL("http://" + serverIP + "/reference.php");
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setReadTimeout(10000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setRequestMethod("GET");
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.connect();
-
-                int responseStatus = httpURLConnection.getResponseCode();
-                InputStream inputStream;
-                if (responseStatus == HttpURLConnection.HTTP_OK) {
-                    inputStream = httpURLConnection.getInputStream();
-                } else {
-                    inputStream = httpURLConnection.getErrorStream();
-                }
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder sb = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                return sb.toString().trim(); // trim: 공백 제거
-            } catch (Exception e) {
-                e.printStackTrace();
-                alertErrorAndExit();
-                return null;
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String result) throws Throwable {
-                        //onPostExcuse
-                        progressDialog.dismiss();
-                        if (result != null) {
-                            getReferenceData(result);
-                        } else {
-                            alertErrorAndExit();
-                        }
-                        backgroundTask.dispose();
-                    }
-                });
-    }
-
-    private void getReferenceData(String jsonString) {
-        try {
-            JSONObject jsonObject = new JSONObject(jsonString);
-            JSONArray jsonArray = jsonObject.getJSONArray("result");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject object = jsonArray.getJSONObject(i);
-
-                // JSON 데이터 파싱
-                String SNP = object.getString("SNP");
-                int CHR = Integer.parseInt(object.getString("CHR"));
-                String PHENOTYPE = object.getString("PHENOTYPE");
-                double BETAOR = Double.parseDouble(object.getString("BETA.OR."));
-                double PVAL = Double.parseDouble(object.getString("P.VAL"));
-                int BP = Integer.parseInt(object.getString("BP"));
-                String minor = object.getString("minor");
-                String major = object.getString("major");
-
-                // 파싱한 데이터를 바탕으로 Reference 데이터를 만들고 Map에 저장
-                ReferenceData referenceData = new ReferenceData(SNP, CHR, PHENOTYPE, BETAOR, PVAL, BP, minor, major);
-                referenceDataHashMap.put(SNP, referenceData);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            alertErrorAndExit();
-        }
     }
 
     /*

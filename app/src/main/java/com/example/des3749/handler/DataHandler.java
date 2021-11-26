@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import static com.example.des3749.SecondActivity.referenceDataHashMap;
+import static com.example.des3749.MainActivity.referenceDataHashMap;
 
 public class DataHandler {
 
