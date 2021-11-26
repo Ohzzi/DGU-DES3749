@@ -23,18 +23,5 @@
         android:gravity="center_horizontal"
         android:text="@string/greeting"/>
 
-    <Button
-        android:id="@+id/startButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="100dp"
-        android:background="@color/orange"
-        app:backgroundTint="@color/orange"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:onClick="onStartButtonClicked"
-        android:text="@string/start_msg"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

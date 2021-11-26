@@ -27,6 +27,10 @@
                 <action android:name="android.intent.action.OPEN_DOCUMENT" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ResultActivity" android:exported="true">
+
+        </activity>
     </application>
 
 </manifest>

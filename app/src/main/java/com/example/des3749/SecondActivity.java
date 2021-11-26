@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.OpenableColumns;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
@@ -50,6 +53,8 @@ public class SecondActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> resultLauncher;
 
     TextView textView;
+    Spinner spinner;
+    ArrayAdapter genderAdapter;
     Disposable backgroundTask;
     ContentResolver resolver;
     Uri fileUri;
@@ -65,15 +70,29 @@ public class SecondActivity extends AppCompatActivity {
     /* IP 주소 바뀔때마다 변경 */
     String serverIP = ConnectionInfo.ip;
 
+    /* EditText로 입력받을 값 */
+    String userName;
+    String age;
+    String height;
+    String weight;
+    String bp_min;
+    String bp_max;
+    String gender;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_second);
-        textView = findViewById(R.id.textView);
-        dataHandler = new DataHandler(SecondActivity.this);
         progressDialog = new ProgressDialog(this);
-        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         loadReferenceData(serverIP);
+
+        setContentView(R.layout.activity_second);
+        textView = findViewById(R.id.text_view);
+        spinner = (Spinner)findViewById(R.id.gender_spinner);
+        genderAdapter = ArrayAdapter.createFromResource(this, R.array.gender, R.layout.spinner_layout);
+        spinner.setAdapter(genderAdapter);
+
+        dataHandler = new DataHandler(SecondActivity.this);
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         resultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -194,9 +213,46 @@ public class SecondActivity extends AppCompatActivity {
             alertError("오류", "불러온 파일이 없습니다.");
             return;
         }
+
+        if ((userName = getEditTextValue(R.id.user_name_text)) == null) {
+            alertError("오류", "이름을 입력해주세요.");
+            return;
+        }
+        if ((age = getEditTextValue(R.id.age_text)) == null) {
+            alertError("오류", "나이를 입력해주세요.");
+            return;
+        }
+        if ((height = getEditTextValue(R.id.height_text)) == null) {
+            alertError("오류", "키를 입력해주세요.");
+            return;
+        }
+        if ((weight = getEditTextValue(R.id.weight_text)) == null) {
+            alertError("오류", "몸무게를 입력해주세요.");
+            return;
+        }
+        if ((bp_min = getEditTextValue(R.id.bp_min)) == null) {
+            alertError("오류", "혈압 수치를 입력해주세요.");
+            return;
+        }
+        if ((bp_max = getEditTextValue(R.id.bp_max)) == null) {
+            alertError("오류", "혈압 수치를 입력해주세요.");
+            return;
+        }
+        Spinner spinner = (Spinner)findViewById(R.id.gender_spinner);
+        gender = spinner.getSelectedItem().toString();
+
         progressDialog.show(); // 로딩 화면을 띄워줌
         Thread thread = new Thread(null, loadData);
         thread.start();
+    }
+
+    public String getEditTextValue(int viewId) {
+        EditText editText = (EditText)findViewById(viewId);
+        if (editText.getText().length() != 0) {
+            return editText.getText().toString();
+        } else {
+            return null;
+        }
     }
 
     /* DataHandler에서 데이터 처리를 해서 결과 값 가져오는 메소드 */
@@ -205,7 +261,7 @@ public class SecondActivity extends AppCompatActivity {
         public void run() {
             try {
                 resultData = dataHandler.getTestData(fileUri, resolver);
-                handler.post(printResult);
+                handler.post(getResult);
             } catch (Exception e) {
                 e.printStackTrace();
                 alertError("오류", "오류가 발생했습니다.");
@@ -216,8 +272,8 @@ public class SecondActivity extends AppCompatActivity {
         }
     };
 
-    /* 가져온 결과 값을 출력하는 메소드 */
-    private final Runnable printResult = new Runnable() {
+    /* 가져온 결과 값을 텍스트로 만드는 메소드 */
+    private final Runnable getResult = new Runnable() {
         @Override
         public void run() {
             // 스레드 생성할 때 dialog를 show 했으므로 dismiss 해서 로딩 창 없애줌
@@ -225,7 +281,7 @@ public class SecondActivity extends AppCompatActivity {
             String resultText;
             try {
                 if (resultData != null) {
-                    resultText = "분석 결과 \n"
+                    resultText = "당신의 유전자 정보\n"
                             + "P.VALUE 최소: " + resultData.getMinPvalData().getSNP() + " " + resultData.getMinPvalData().getPval() + "\n"
                             + "P.VALUE 최대: " + resultData.getMaxPvalData().getSNP() + " " + resultData.getMaxPvalData().getPval() + "\n"
                             + "geno 0 개수: " + resultData.getCount0() + "\n"
@@ -234,9 +290,20 @@ public class SecondActivity extends AppCompatActivity {
                 } else {
                     resultText = "오류가 발생했습니다.";
                 }
-                textView.setText(resultText);
+                Intent intent = new Intent(SecondActivity.this, ResultActivity.class);
+                intent.putExtra("result", resultText);
+                intent.putExtra("userName", userName);
+                intent.putExtra("age", age);
+                intent.putExtra("height", height);
+                intent.putExtra("weight", weight);
+                intent.putExtra("gender", gender);
+                intent.putExtra("bp_min", bp_min);
+                intent.putExtra("bp_max", bp_max);
+                startActivity(intent);
+
+                textView.setText("");
                 isFileLoaded = false;
-            } catch(NullPointerException e) {
+            } catch (NullPointerException e) {
                 alertError("오류", "올바르지 않은 파일입니다.");
                 resultText = "";
                 textView.setText(resultText);
