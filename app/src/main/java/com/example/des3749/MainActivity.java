@@ -41,7 +41,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         loadReferenceData(ip);
         Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-        startActivity(intent);
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                startActivity(intent);
+            }
+        }, 1000);
     }
 
     /* reference data 들을 읽어오는 메소드 */
@@ -123,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /* 오류 창을 생성하고 프로그램 자체를 종료시키는 메소드. HTTP 통신이 불가능 할 때 사용 */
     private void alertErrorAndExit() {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(MainActivity.this);
         alertBuilder.setTitle("오류");

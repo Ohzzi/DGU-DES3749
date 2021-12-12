@@ -23,6 +23,7 @@
     <string name="bp_max_text">최고</string>
     <string name="file">유전 정보 파일</string>
 
+    <string name="title">%1$s님 환영합니다</string>
     <string name="sub_bar_result">분석 결과</string>
     <string name="sub_bar_exercise">운동 추천</string>
     <string name="sub_bar_food">음식 추천</string>

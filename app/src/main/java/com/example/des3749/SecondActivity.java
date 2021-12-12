@@ -258,18 +258,4 @@ public class SecondActivity extends AppCompatActivity {
         alertBuilder.show();
     }
 
-    /* 오류 창을 생성하고 프로그램 자체를 종료시키는 메소드. HTTP 통신이 불가능 할 때 사용 */
-    private void alertErrorAndExit() {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(SecondActivity.this);
-        alertBuilder.setTitle("오류");
-        alertBuilder.setMessage("오류가 발생했습니다. 재시작해주세요");
-        alertBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                moveTaskToBack(true);
-                finish();
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }
-        });
-        alertBuilder.show();
-    }
 }
